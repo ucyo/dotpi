@@ -19,6 +19,12 @@ Pi coding agent configuration — skills and settings for use with `ucyo/pi` Doc
     git clone git@github.com:ucyo/dotpi.git .pi/
     ```
 
+## Extensions
+
+| Name | Description |
+|------|-------------|
+| [uv](extensions/uv.ts) | Redirects `pip`, `pip3`, `poetry`, and `python` to `uv` equivalents |
+
 ## Skills
 
 | Name | Description |
