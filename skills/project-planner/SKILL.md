@@ -1,31 +1,35 @@
 ---
 name: project-planner
-description: "Plan and execute projects through structured spec-driven development. Use when the user wants to plan a project, scope features, create a specification, build a roadmap, or break work into milestones. Trigger on phrases like 'let's plan this out,' 'help me scope this,' 'break this into steps,' 'create a roadmap,' 'define the requirements,' 'let's spec this,' or 'I want to build X.' If spec.md or progress.md exists in the workspace, use this skill to continue the project."
+description: "Plan and BUILD projects through structured spec-driven development. Use when the user wants to plan a project, scope features, create a specification, build a roadmap, or break work into milestones. Trigger on phrases like 'let's plan this out,' 'help me scope this,' 'break this into steps,' 'create a roadmap,' 'define the requirements,' 'let's spec this,' or 'I want to build X.' If SPEC.md or PROGRESS.md exists in the workspace, use this skill to continue the project. THIS SKILL MUST PRODUCE WORKING CODE AND FILES, NOT JUST PLANS."
 ---
 
 # Project Planner
 
-A structured workflow for planning and executing projects of any kind — code, documentation, infrastructure, design, or anything else. Agree on what to build through discussion, capture it in a spec, then execute milestone by milestone with review checkpoints.
+A structured workflow for planning AND BUILDING projects — code, documentation, infrastructure, design, or anything else. Agree on what to build through discussion, capture it in a spec, then build it sub-milestone by sub-milestone with review checkpoints after each one.
 
-This keeps you and the user aligned throughout. Without a spec, projects drift — requirements get forgotten, decisions get revisited, and work gets thrown away. The spec is the contract; progress tracking is the memory.
+**The cardinal rule: this skill BUILDS things.** Planning exists to make building effective, not to replace it. After each sub-milestone is specified, you must write the actual code, create the actual files, and produce working output. If you finish a planning phase and haven't created any project files, something is wrong.
+
+Two files drive everything:
+- **SPEC.md** — What to build: overview, execution plan, milestones with sub-milestones and granular tasks
+- **PROGRESS.md** — Where things stand: checklist of completed sub-milestones plus notes
+
+For templates, see `references/templates.md`.
 
 ## Step 0: Assess Intent (Do This First, Every Time)
 
-Before doing anything else, classify the user's intent into one of three modes. This determines the entire flow — get it right.
+Classify the user's intent into one of three modes:
 
 **Mode A — Full planning** (user says things like "let's plan this out," "help me scope this," "let's spec this," "create a roadmap"):
-Follow the complete workflow below starting at Phase 1.
+Follow the complete workflow starting at Phase 1.
 
 **Mode B — Fast builder** (user says things like "just build it," "don't overthink it," "let's go," "keep it simple," or provides a small/clear task with urgency):
-The user does not want a planning session. Do NOT skip straight to building either. Instead, respond with something like:
+The user does not want a planning session. Briefly offer a minimal spec:
 
-"Happy to build this right away. One quick thought — even a minimal spec (just goals, milestones, and done-criteria) helps if you want to pick this up later or change direction. Takes 30 seconds to review. Want one, or should I just start building?"
+"Happy to build this right away. Even a minimal spec (overview + milestones + tasks) helps if you want to pick this up later or change direction. Takes 30 seconds to review. Want one, or should I just start building?"
 
-Then follow the user's answer. If they want the minimal spec, generate a stripped-down `spec.md` (goals + milestones + acceptance criteria only — no discovery, no proposal, no design decisions). If they say skip it, build without the spec. Either way, respect their pace. If this is a non-interactive session (no way to ask and wait), mention the spec option briefly at the top of your response, then proceed to build.
+If they want the minimal spec, generate a stripped-down SPEC.md (overview table + execution plan + milestones with sub-milestones and tasks — no discovery, no proposal). If they say skip it, build without the spec.
 
-This step exists because a user who says "just build it" and gets a discovery interview will lose trust in the skill. But silently skipping the spec means losing resumability and alignment for free. The one-sentence offer is the right balance.
-
-**Mode C — Resumption** (spec.md and/or progress.md exist in workspace):
+**Mode C — Resumption** (SPEC.md and/or PROGRESS.md exist in workspace):
 Skip to "Resuming a Project" below.
 
 ---
@@ -33,27 +37,20 @@ Skip to "Resuming a Project" below.
 ## The Workflow
 
 ```
-Discovery → Proposal → Spec → [Execute → Verify → Review → Commit] per milestone
+Discovery → Proposal → Spec → [Build Sub-milestone → Review → Approve] per sub-milestone
 ```
-
-Two files drive everything:
-- **spec.md** — What to build, why, and how (the plan)
-- **progress.md** — Where things stand, what's been done, what's next (the memory)
-
-For templates of both files and the review format, see `references/templates.md`.
 
 ---
 
 ## Phase 1: Discovery
 
-Start a conversation to understand the project. Be an active participant, not a passive note-taker. Take your time here — a thorough discovery prevents wasted work downstream.
+Start a conversation to understand the project. Be an active participant, not a passive note-taker.
 
 **How to run the discussion:**
-- Ask questions one at a time — don't overwhelm with a list of ten things
-- When the user describes something, suggest ideas and improvements
-- Always offer multiple options (at least two) for any decision or approach — explain trade-offs briefly so the user can make an informed choice
-- Dig into areas that feel vague — "what does success look like?" and "what are the constraints?" are always good questions
-- Draw on relevant knowledge to suggest things the user might not have considered
+- Ask questions one at a time — don't overwhelm with a list
+- Suggest ideas and improvements as the user describes things
+- Offer multiple options (at least two) for decisions — explain trade-offs briefly
+- Dig into vague areas — "what does success look like?" and "what are the constraints?"
 
 **Areas to explore** (adapt to the project type):
 - What is the project trying to achieve and why?
@@ -64,196 +61,161 @@ Start a conversation to understand the project. Be an active participant, not a 
 - Are there existing patterns, tools, or conventions to follow?
 
 **When to move on:**
-When you feel you have enough context to write a meaningful proposal, say so: "I think I have a good understanding of what you're after. Shall I draft a proposal so we can check alignment before I write the full spec?" Let the user confirm or add more context.
+When you have enough context to write a meaningful proposal, say so and let the user confirm.
 
 ---
 
 ## Phase 2: Proposal
 
-Before investing in a full spec, write a short proposal to confirm alignment. This catches misunderstandings early and cheaply — a wrong direction caught here saves hours of wasted execution.
+A short alignment check before investing in the full spec.
 
 **The proposal includes:**
+- **Goals** — What the project aims to achieve and why
+- **Core Approach** — High-level strategy, not details
+- **Key Constraints** — Deadlines, technology choices, compatibility requirements
 
-**Goals** — State your understanding of what the project aims to achieve and why it matters. This is the most important alignment check — if the goals are wrong, everything downstream is wrong.
-
-**Core Approach** — How you plan to tackle it — the high-level strategy, not the details. Enough for the user to say "yes, that's the direction" or "no, you've missed the point."
-
-**Key Constraints** — Anything that limits or shapes the solution — deadlines, technology choices, compatibility requirements, budget, team size.
-
-Keep it short — a few paragraphs, not a document. Present it conversationally and ask for explicit approval before proceeding to the full spec.
+Keep it to a few paragraphs. Get explicit approval before proceeding.
 
 ---
 
 ## Phase 3: Spec Generation
 
-Once the proposal is approved, generate `spec.md`. This is the source of truth for the entire project. See `references/templates.md` for the full template.
+Once the proposal is approved, generate `SPEC.md`. See `references/templates.md` for the full template.
 
-The spec contains:
-- **Goals** — Why the project exists and what success looks like
-- **Approach** — The high-level strategy
-- **Design Decisions** — What was chosen, what alternatives existed, and why (as a list, not a table — easier to maintain)
-- **Milestones** — Each with a description, tasks, and acceptance criteria
+**The spec MUST contain:**
+
+1. **Overview** — Brief description plus a summary table (project name, users, user goal, developer goal)
+
+2. **Execution Plan** — A table showing all milestones at a glance (phase number, name, one-line description)
+
+3. **Milestones with Sub-milestones** — Each milestone (M0, M1, M2...) is broken into sub-milestones (M0.1, M0.2, etc.). Each sub-milestone has:
+   - A clear name describing what it delivers
+   - Granular, file-level tasks as checkboxes (`- [ ]`)
+   - A `<!-- ⛔ STOP -->` comment at the end enforcing review before continuing
+
+4. **Architecture Notes** — Inline blockquotes within milestones where non-obvious design decisions affect the work
 
 **Writing good tasks:**
-Tasks should be specific enough to execute without ambiguity, but not so granular that they prescribe exact filenames. Good: "Create authentication middleware that validates JWT tokens and extracts user roles." Bad: "Add auth." Also bad: "Write src/middleware/auth.ts line by line."
+Tasks must be specific enough to execute without ambiguity. Name the files, modules, endpoints, and components. Good: "Create `backend/main.py` with FastAPI app" or "Add health check endpoint (`GET /health`)". Bad: "Set up backend." Also bad: "Write the server code."
 
-**Writing good acceptance criteria:**
-Each criterion should be verifiable — you or the user can look at the result and definitively say yes or no. Good: "Login endpoint returns a token on valid credentials and 401 on invalid." Bad: "Authentication works properly." For non-code projects, lean on specific deliverables: "README covers installation, configuration, and usage with examples."
+**Writing good sub-milestones:**
+Each sub-milestone must be a reviewable, completable unit of work. It should be small enough to build in one focused session and large enough to be meaningful. If a sub-milestone has more than ~7 tasks, consider splitting it.
 
 **After generating the spec:**
-Present it to the user for review. Walk through each milestone and its acceptance criteria. Ask if anything needs adjustment — milestones reordered, tasks added or removed, criteria refined. Don't rush this — the spec is the foundation everything else builds on. Update based on feedback before proceeding.
+Present it to the user. Walk through the execution plan and milestones. Ask if anything needs adjustment. Update based on feedback.
 
-Also create the initial `progress.md` (see template in `references/templates.md`).
+Also create the initial `PROGRESS.md` (see template in `references/templates.md`).
 
 ---
 
-## Phase 4: Execution
+## Phase 4: Build
 
-Work through milestones one at a time.
+**This is where you write actual code and create actual files.** Work through sub-milestones one at a time.
 
 ### Context Reset
 
-Before starting any milestone (including the first one), re-read both `spec.md` and `progress.md` from disk. This is essential because:
-- The spec may have been updated during a previous review
-- In a new session, you have no memory of prior work
-- Even within a session, conversation context degrades over time
+Before starting any sub-milestone, re-read both `SPEC.md` and `PROGRESS.md` from disk. Do this every time, without exception — the spec may have been updated, and in a new session you have no memory of prior work.
 
-Do this every time, without exception.
+### Build the Sub-milestone
 
-### Do the Work
+Execute the tasks for the current sub-milestone. **This means writing real code, creating real files, running real commands.** Follow the spec, reference the architecture notes, and stay within the scope of the sub-milestone.
 
-Execute the tasks for the current milestone. Follow the spec, reference the design decisions, and stay within the scope of the milestone.
+After completing the tasks:
+1. Mark the tasks as done in `SPEC.md` (`- [x]`)
+2. Verify the work — run tests, check the output, confirm things work
+3. Update `PROGRESS.md` — mark the sub-milestone completed, add any notes about decisions or deviations
+
+### Present the Review
+
+Present the completed sub-milestone using the review template from `references/templates.md`:
+- What was delivered (files created, endpoints added, etc.)
+- Verification results
+- Any deviations from spec
+- What the next sub-milestone is
+
+### ⛔ STOP and Wait
+
+**After presenting the review, STOP.** Do not continue to the next sub-milestone. Wait for the user to review and approve. Three possible responses:
+
+- **"Looks good, continue"** → Start the next sub-milestone (with a context reset)
+- **Small feedback** → Revise, re-verify, re-present
+- **Bigger shift** → Update SPEC.md to reflect the change, then revise
 
 ### Blocker Protocol
 
-When you hit something that doesn't match the spec — a technical impossibility, a contradiction between requirements, unexpected complexity, or a decision that needs user input:
+When you hit something that doesn't match the spec:
 
-**For genuine blockers** — stop and raise the issue immediately:
-1. Explain clearly what the problem is
+**For genuine blockers** — stop and raise the issue:
+1. Explain what the problem is
 2. Propose at least two options with trade-offs
-3. Note the impact on the current milestone and any downstream effects
-4. Wait for the user to decide before continuing
+3. Wait for the user to decide
 
-**For minor deviations** — small adjustments where the intent is clear but the specifics need tweaking: make a judgment call, note it in progress.md, and mention it during the milestone review. Save the user's attention for decisions that actually matter.
-
-The distinction matters because stopping too often is annoying and breaks flow, but silently working around real problems leads to wasted effort. Use judgment: if you'd want to know about it as the project owner, stop and ask.
+**For minor deviations** — make a judgment call, note it in PROGRESS.md, mention it in the review.
 
 ---
 
-## Phase 5: Self-Verification
+## Phase 5: Commit
 
-After completing a milestone's work, before presenting it to the user, check your work against the acceptance criteria. Take your time with this — thoroughness here saves review cycles.
+Once the user approves a sub-milestone (or a group of sub-milestones that form a logical unit), commit the work.
 
-Go through each criterion one by one:
-- **Pass:** The work clearly satisfies this criterion
-- **Partial:** The work addresses this but with caveats
-- **Fail:** This criterion is not met
-
-If anything is partial or failing, fix it before presenting. If it can't be fixed without user input, note it for the review.
-
-This step exists because catching your own mistakes before the user sees them saves everyone time and builds trust in the process.
-
----
-
-## Phase 6: Structured Review Presentation
-
-Present the completed milestone using the review template from `references/templates.md`. The format covers: what was planned, what was delivered, acceptance criteria status (✅/⚠️), deviations, blockers encountered, and what's next.
-
-This consistent format exists so the user always knows where to look. They can scan the acceptance criteria to see if things are on track, check deviations to understand what changed, and glance at what's next.
-
----
-
-## Phase 7: User Decision
-
-After presenting the review, wait for the user's response. Three paths:
-
-**"Looks good, continue"** → Proceed to commit, then start the next milestone.
-
-**Small feedback** (typos, minor adjustments, "can you also add X to this") → Revise the work in place. Re-verify against acceptance criteria. Re-present the updated review.
-
-**Bigger shifts** ("this approach isn't working, we need to rethink authentication") → Update `spec.md` to reflect the new direction. This might affect the current milestone, future milestones, or both. Walk the user through the changes to the spec before revising the work. The spec is the source of truth — it should always reflect reality.
-
----
-
-## Phase 8: Commit
-
-Once the user approves a milestone, commit the work. One commit per milestone keeps the history clean and meaningful.
-
-Read the `commit` skill if available for commit message formatting. If not, use a clear, descriptive commit message that references the milestone: e.g., `feat(auth): implement JWT authentication (milestone 2)`.
-
-After committing, update `progress.md` — this is critical for resumability.
-
----
-
-## Progress Tracking and Resumability
-
-`progress.md` is the most important file for project continuity. It's not just a status tracker — it's a handoff document. When a new session starts, a fresh Claude instance reads this file and should be able to continue the project seamlessly.
-
-Each milestone entry should capture: what was delivered, decisions made during execution, deviations from spec, and user feedback. For in-progress milestones: what's done so far, what's next, and any open questions. See `references/templates.md` for detailed examples.
-
-This level of detail means a fresh Claude instance can pick up mid-milestone without re-asking questions or making different choices.
+Read the `commit` skill if available for commit message formatting. If not, use a clear message referencing the sub-milestone: e.g., `feat(auth): implement JWT authentication (M2.3)`.
 
 ---
 
 ## Resuming a Project
 
-When you detect an existing `spec.md` and `progress.md` in the workspace:
+When you detect an existing `SPEC.md` and `PROGRESS.md` in the workspace:
 
 1. Read both files completely
-2. Identify where the project left off
-3. Summarize the current state to the user: "It looks like you're working on [project]. Milestone N is [status]. Want me to continue from here?"
-4. If continuing, follow the normal execution flow starting from the context reset
+2. Identify where the project left off (check the "Current" section in PROGRESS.md)
+3. Summarize the current state to the user: "It looks like you're working on [project]. Sub-milestone M[X].[Y] is next. Want me to continue from here?"
+4. If continuing, follow Phase 4 starting with a context reset
 
-If the user wants to change direction, go back to the discovery phase — but keep the existing spec as a starting point rather than starting from scratch.
+If the user wants to change direction, go back to discovery — but keep the existing spec as a starting point.
 
 ---
 
 ## Example Walkthrough
 
-Here's a condensed example of the full flow for a documentation project:
+Condensed example of the full flow:
 
 **Discovery:**
-> User: "I want to create developer docs for our API."
-> Claude: "Who's the primary audience — external developers integrating with your API, or internal team members?"
-> User: "External developers."
-> Claude: "Got it. Two options for structure: (A) endpoint-first reference docs, or (B) task-based guides that teach common workflows. Which resonates more?"
-> User: "A mix — reference docs with a getting-started guide."
+> User: "I want to build a web portal for our team."
+> Claude: "Who's the primary audience?"
+> User: "Internal researchers, about 10 people."
+> Claude: "Got it. Two options for the stack: (A) React SPA + REST API, or (B) server-rendered HTML with FastAPI. Which fits better?"
+> User: "B — keep it simple."
 
 **Proposal:**
-> **Goals:** Create API documentation that enables external developers to integrate successfully without support assistance.
-> **Approach:** Getting-started guide + full endpoint reference + code examples in Python and JavaScript.
-> **Constraints:** Must cover v2 API only. Ship within 2 weeks.
+> **Goals:** Web portal for researchers to interact with the system without CLI knowledge.
+> **Approach:** FastAPI backend, vanilla HTML/CSS/JS frontend, WebSocket for real-time.
+> **Constraints:** Single instance per laptop, no external dependencies.
 
 User approves. →
 
-**Spec:** Claude generates spec.md with 3 milestones:
-1. Getting Started guide (acceptance: covers auth, first API call, error handling)
-2. Endpoint Reference (acceptance: all 15 endpoints documented with request/response examples)
-3. Code Examples (acceptance: working examples in Python and JS for top 5 use cases)
+**Spec:** Claude generates SPEC.md with overview table, execution plan, and milestones broken into sub-milestones:
+- M0: Project Setup (M0.1 folder structure, M0.2 dependencies, M0.3 basic app, M0.4 service integration)
+- M1: Basic UI (M1.1 HTML/CSS, M1.2 WebSocket, M1.3 message routing, M1.4 rendering)
+- M2: Persistence (M2.1 parser, M2.2 list API, M2.3 sidebar, M2.4 view past items)
 
-**Execution of Milestone 1:**
-- Claude re-reads spec.md and progress.md
-- Writes the getting-started guide
-- Hits a blocker: auth flow uses OAuth but spec didn't mention refresh tokens → raises it, user decides to include refresh token docs
-- Self-verifies against acceptance criteria: ✅ auth, ✅ first call, ✅ error handling
-- Presents structured review
-- User approves → commit → progress.md updated
+**Building M0.1:**
+- Claude creates project folders, README, .gitignore, initializes git
+- Marks tasks `[x]` in SPEC.md, updates PROGRESS.md
+- Presents review: "Created project structure with backend/, frontend/, README.md, .gitignore. Next up: M0.2 - Set up Python environment."
+- ⛔ Stops and waits for user
 
-**Milestone 2 begins** with a context reset, and the cycle continues.
+**User:** "Looks good, continue" → Claude starts M0.2 with context reset, builds the next sub-milestone.
 
 ---
 
 ## Adapting to Project Type
 
-This workflow is designed to be broad. The structure stays the same; the content adapts.
+The structure stays the same; the content adapts.
 
-**Code projects:** Tasks reference components, endpoints, modules. Acceptance criteria are often testable. Commits contain code changes.
-
-**Documentation projects:** Tasks reference sections, chapters, topics. Acceptance criteria focus on coverage and clarity.
-
-**Infrastructure projects:** Tasks reference services, configurations, environments. Acceptance criteria focus on operational requirements.
-
-**Design projects:** Tasks reference deliverables — wireframes, mockups, design systems. Acceptance criteria focus on completeness and consistency.
+**Code projects:** Tasks reference files, endpoints, modules. Sub-milestones are buildable units.
+**Documentation projects:** Tasks reference sections, chapters. Sub-milestones are reviewable drafts.
+**Infrastructure projects:** Tasks reference services, configs, environments.
+**Design projects:** Tasks reference deliverables — wireframes, mockups, systems.
 
 Don't force code-specific language onto non-code projects.
 
@@ -261,17 +223,14 @@ Don't force code-specific language onto non-code projects.
 
 ## Troubleshooting
 
-**spec.md exists but progress.md is missing:**
-The project was likely started but progress wasn't tracked. Read spec.md, assess the current state of the workspace (check what files/work already exist), and reconstruct a progress.md based on what you find. Confirm with the user before continuing.
+**SPEC.md exists but PROGRESS.md is missing:**
+Read SPEC.md, assess the workspace state, reconstruct PROGRESS.md from what exists. Confirm with the user.
 
-**User returns mid-milestone in a new session:**
-Read both files. The in-progress entry in progress.md should tell you exactly where things stand — what's done, what's next, and any open questions. Summarize this to the user and pick up where the previous session left off.
+**User returns mid-sub-milestone in a new session:**
+Read both files. PROGRESS.md should tell you what's done and what's next. Summarize and pick up.
 
-**Spec feels stale or out of sync with reality:**
-If progress.md shows repeated deviations from the spec, the spec has drifted. Propose a spec refresh to the user — review remaining milestones and update them to reflect current reality. The spec should always be trustworthy.
+**Spec feels stale:**
+If PROGRESS.md shows repeated deviations, propose a spec refresh — review remaining milestones and update them.
 
-**Project scope has grown significantly:**
-If new milestones keep getting added during reviews, pause and have a scoping conversation. Help the user distinguish between "must have for this project" and "nice to have for a future project." Update the spec to reflect the agreed scope.
-
-**User wants to skip the planning phases:**
-See "Step 0: Assess Intent" at the top of this skill.
+**Scope creep:**
+If new milestones keep getting added, pause and have a scoping conversation. Distinguish "must have" from "future project."

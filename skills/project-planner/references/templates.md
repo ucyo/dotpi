@@ -1,136 +1,147 @@
 # Templates
 
-Reference templates for spec.md and progress.md. Use these as starting points and adapt to the project.
+Reference templates for SPEC.md and PROGRESS.md. Use these as starting points and adapt to the project. The key principles: specs must be granular enough to execute without ambiguity, sub-milestones enforce incremental review, and progress tracking stays lightweight.
 
-## spec.md Template
+## SPEC.md Template
 
 ```markdown
-# [Project Name] — Specification
+# [Project Name] - Specification
 
-## Goals
-Why this project exists and what success looks like.
+## Overview
 
-## Approach
-The high-level strategy and key technical/design choices.
+Brief description of what the project is and who it serves.
 
-## Design Decisions
-Decisions made during planning, what was chosen, and why.
+| Aspect             | Description                                       |
+| ------------------ | ------------------------------------------------- |
+| **Project Name**   | [name]                                            |
+| **Users**          | [who uses it, scale]                              |
+| **User Goal**      | [what users want to accomplish]                   |
+| **Developer Goal** | [what the developer/team wants to achieve]        |
 
-### [Decision Name]
-- **Options:** Option A, Option B, Option C
-- **Choice:** Option B
-- **Why:** Brief reasoning explaining the trade-off
+## Execution Plan
 
-### [Another Decision]
-- **Options:** ...
-- **Choice:** ...
-- **Why:** ...
+| Phase | Milestone                 | Description                                       |
+| ----- | ------------------------- | ------------------------------------------------- |
+| M0    | [Name]                    | [Brief description]                               |
+| M1    | [Name]                    | [Brief description]                               |
+| M2    | [Name]                    | [Brief description]                               |
+| M3    | [Name]                    | [Brief description]                               |
 
 ## Milestones
 
-### Milestone 1: [Name]
-**Description:** What this milestone delivers.
+> **⛔ STOP RULE:** Complete ONE sub-milestone, then STOP and wait for user review. Do not continue to the next sub-milestone without approval.
 
-**Tasks:**
-- [ ] Specific, actionable task closer to file-level detail
-- [ ] Another task with enough context to execute without guessing
-- [ ] ...
+### M0 - [Milestone Name]
 
-**Acceptance Criteria:**
-- Concrete, verifiable condition that defines "done"
-- Another condition
-- ...
+#### M0.1 - [Sub-milestone name]
+- [ ] Specific, file-level task (e.g., "Create `backend/main.py` with FastAPI app")
+- [ ] Another specific task with enough detail to execute without guessing
+- [ ] Include file paths, module names, endpoint paths where relevant
+<!-- ⛔ STOP: Complete this sub-milestone, run tests, then wait for user review before continuing -->
 
-### Milestone 2: [Name]
-**Description:** ...
+#### M0.2 - [Sub-milestone name]
+- [ ] Task with concrete deliverable
+- [ ] Another task
+<!-- ⛔ STOP: Complete this sub-milestone, run tests, then wait for user review before continuing -->
 
-**Tasks:**
-- [ ] ...
+---
 
-**Acceptance Criteria:**
-- ...
+### M1 - [Milestone Name]
+
+> **Architecture Note:** [Include architecture decisions inline where they affect the milestone. E.g., "Sessions stored in JSONL format. No database needed."]
+
+#### M1.1 - [Sub-milestone name]
+- [ ] Granular task
+- [ ] Another task
+<!-- ⛔ STOP: Complete this sub-milestone, run tests, then wait for user review before continuing -->
+
+#### M1.2 - [Sub-milestone name]
+- [ ] Task
+- [ ] Task
+<!-- ⛔ STOP: Complete this sub-milestone, run tests, then wait for user review before continuing -->
+
+---
 ```
 
-## progress.md Template — Initial State
+### Guidelines for writing good sub-milestones
+
+- **Break milestones into sub-milestones (M0.1, M0.2, etc.)** — each sub-milestone is a reviewable unit of work that can be completed and verified independently.
+- **Tasks must be file-level specific** — name the files, modules, endpoints, and components being created or modified. Good: "Create `backend/session_parser.py` module". Bad: "Add session parsing."
+- **Use checkbox format** — `- [ ]` for pending, `- [x]` for done. This makes progress scannable.
+- **Add Architecture Notes** — when a milestone involves a non-obvious design choice, add a blockquote note at the top of the milestone explaining the decision so the builder doesn't have to look elsewhere.
+- **Every sub-milestone ends with a STOP rule** — the `<!-- ⛔ STOP -->` comment enforces that the agent pauses for user review after each sub-milestone.
+- **Each sub-milestone should be completable in one focused session** — if a sub-milestone feels too big, split it further.
+
+## PROGRESS.md Template — Initial State
 
 ```markdown
-# [Project Name] — Progress
+# Progress
 
-## Current Status
-**Active Milestone:** Not started
-**Overall:** 0 of N milestones complete
+## Current: M0 - [Milestone Name]
 
-## Milestone Log
+(No sub-milestones completed yet)
 
-(Updated as milestones are completed)
+## Notes
+- [Key architecture decisions, dependencies, or context worth remembering]
 ```
 
-## progress.md — Completed Milestone Entry
+## PROGRESS.md — With Progress
 
 ```markdown
-## Milestone 2: Authentication — ✅ COMPLETE
+# Progress
 
-### What was delivered
-- JWT authentication middleware with role extraction
-- Login/logout endpoints at /api/auth/login and /api/auth/logout
-- Role-based access control (admin, user) on protected routes
+## Completed: M0 - Project Setup
 
-### Decisions made during execution
-- Used httpOnly cookies for token storage (avoids XSS, discussed with user)
-- Token expiry set to 15min with refresh token pattern
-- Chose jose library over jsonwebtoken (better TypeScript support)
+- [x] M0.1: completed - project structure initialized
+- [x] M0.2: completed - Python environment set up
+- [x] M0.3: completed - process management setup
+- [x] M0.4: completed - basic app running
+- [x] M0.5: completed - external service communication verified
 
-### Deviations from spec
-- Added refresh token endpoint (not in original spec) — needed for usable session length
-- Updated in spec.md under design decisions
+## Completed: M1 - Basic Chat
 
-### Accepted by user
-Date: 2026-03-19
-Feedback: "Looks good, proceed"
+- [x] M1.1: completed - Frontend HTML/CSS structure
+- [x] M1.2: completed - WebSocket connection
+- [x] M1.3: completed - Backend message routing
+
+## Current: M2 - Session Persistence
+
+- [x] M2.1: completed - Session file parser (backend/session_parser.py)
+- [x] M2.2: completed - Session list API (GET /api/sessions)
+- [ ] M2.3: not started - Sidebar session list
+
+## Notes
+- Architecture changed: using JSONL sessions as single source of truth instead of database
+- Dependencies: fastapi, uvicorn, websockets, pydantic-settings
+- Dev deps: pytest, pytest-asyncio, httpx, ruff
+- WebSocket handles streaming with reconnection logic
 ```
 
-## progress.md — In-Progress Milestone Entry
+### Guidelines for progress tracking
 
-```markdown
-## Milestone 3: User Profiles — 🔄 IN PROGRESS
-
-### Completed so far
-- Database schema for user profiles
-- GET /api/users/:id endpoint
-
-### Decisions made during execution
-- Using a separate profiles table rather than extending the users table (normalization)
-
-### Next up
-- PUT /api/users/:id for profile updates
-- Avatar upload with S3 storage
-
-### Open questions
-- Avatar size limits not specified in spec — need to ask user
-```
+- **Keep it lightweight** — one line per sub-milestone with status and brief description. No verbose prose.
+- **Group by milestone** — use "Completed:", "Current:", and optionally "Upcoming:" sections.
+- **Notes section at the bottom** — capture architecture decisions, dependency lists, deviations, and important context. This is the handoff document for resuming in a new session.
+- **Update after each sub-milestone** — mark the sub-milestone done and note any decisions or deviations in the Notes section.
 
 ## Structured Review Template
 
-```markdown
-### Milestone [N] Review: [Name]
+Use this when presenting a completed sub-milestone to the user for review:
 
-**Planned:** Brief summary of what this milestone was supposed to deliver.
+```markdown
+### M[X].[Y] Review: [Sub-milestone Name]
 
 **Delivered:**
-- What was actually built/created/completed
-- Each major piece of work
+- What was actually built/created
+- Each file or component
 - ...
 
-**Acceptance Criteria:**
-- ✅ Criterion that passed
-- ✅ Another passing criterion
-- ⚠️ Criterion with caveats (explain)
+**Verification:**
+- ✅ Thing that works
+- ✅ Another thing verified
+- ⚠️ Thing with caveats (explain)
 
-**Deviations:** Any differences from the spec and why they happened.
-If none: "None — delivered as specified."
+**Deviations from spec:** None / [describe if any]
 
-**Blockers Encountered:** Any issues that came up during execution.
-If none: "None."
-
-**Next Milestone:** Brief preview of what's coming next.
+**Next up:** M[X].[Y+1] - [Next sub-milestone name]
 ```
