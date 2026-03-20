@@ -1,0 +1,32 @@
+{
+  "skill_name": "project-planner",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I want to build a CLI tool that helps developers manage their dotfiles across multiple machines. It should support symlinking, backup, and restore. Let's plan this out.",
+      "expected_output": "Claude should enter discovery phase, ask questions one at a time about the project (target platforms, language preferences, existing dotfile setups), suggest options with trade-offs, and eventually propose drafting a proposal. Should NOT dump a full spec immediately.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "I was working on a project last week and had to stop. There should be a spec.md and progress.md in the workspace. Can you pick up where I left off?",
+      "expected_output": "Claude should detect the resumption scenario, read both spec.md and progress.md, summarize the current state (which milestone is active, what's been completed, any open questions), and ask the user if they want to continue from where things left off. Should NOT restart discovery or overwrite existing files.",
+      "files": [
+        {
+          "path": "spec.md",
+          "content": "# Task Manager API — Specification\n\n## Goals\nBuild a REST API for a personal task management app.\n\n## Approach\nNode.js with Express, SQLite for storage, JWT auth.\n\n## Design Decisions\n\n### Database\n- **Options:** PostgreSQL, SQLite, MongoDB\n- **Choice:** SQLite\n- **Why:** Single-user app, no need for a database server, simple deployment.\n\n## Milestones\n\n### Milestone 1: Project Setup\n**Description:** Initialize project structure, dependencies, and basic server.\n\n**Tasks:**\n- [x] Initialize Node.js project with TypeScript\n- [x] Set up Express server with health check endpoint\n- [x] Configure SQLite with migrations\n\n**Acceptance Criteria:**\n- Server starts and responds to GET /health\n- Database file is created on first run\n\n### Milestone 2: Task CRUD\n**Description:** Create, read, update, delete tasks.\n\n**Tasks:**\n- [ ] Create Task model and migration\n- [ ] Implement POST /tasks endpoint\n- [ ] Implement GET /tasks and GET /tasks/:id\n- [ ] Implement PUT /tasks/:id and DELETE /tasks/:id\n\n**Acceptance Criteria:**\n- All CRUD operations work correctly\n- Invalid IDs return 404\n- Missing required fields return 400\n\n### Milestone 3: Authentication\n**Description:** JWT-based auth for the API.\n\n**Tasks:**\n- [ ] User model and registration endpoint\n- [ ] Login endpoint returning JWT\n- [ ] Auth middleware protecting task endpoints\n\n**Acceptance Criteria:**\n- Registration creates user, login returns token\n- Protected routes reject requests without valid token\n- Tasks are scoped to the authenticated user"
+        },
+        {
+          "path": "progress.md",
+          "content": "# Task Manager API — Progress\n\n## Current Status\n**Active Milestone:** Milestone 2: Task CRUD\n**Overall:** 1 of 3 milestones complete\n\n## Milestone Log\n\n## Milestone 1: Project Setup — ✅ COMPLETE\n\n### What was delivered\n- Node.js project with TypeScript configuration\n- Express server with GET /health endpoint\n- SQLite database with better-sqlite3, migrations directory set up\n\n### Decisions made during execution\n- Used better-sqlite3 over sql.js for performance\n- Added nodemon for dev workflow\n\n### Deviations from spec\nNone\n\n### Accepted by user\nDate: 2026-03-12\nFeedback: \"Looks good\"\n\n## Milestone 2: Task CRUD — 🔄 IN PROGRESS\n\n### Completed so far\n- Task model and migration created\n- POST /tasks endpoint working\n\n### Decisions made during execution\n- Added a 'priority' field (low/medium/high) to tasks — felt natural, will mention in review\n\n### Next up\n- GET /tasks and GET /tasks/:id\n- PUT /tasks/:id and DELETE /tasks/:id\n\n### Open questions\n- Should GET /tasks support filtering by status (done/pending)?"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I just need you to build me a simple markdown blog generator in Python. Don't overthink it — just read markdown files from a folder and output HTML. Let's go.",
+      "expected_output": "Claude should recognize the user wants to skip planning. Should briefly explain the value of a lightweight spec (alignment, resumability) but respect the preference. Should offer a minimal version — a quick spec with just milestones and acceptance criteria, no full discovery or proposal. If the user insists on skipping entirely, proceed without the spec. Should NOT force the full workflow on a user who clearly wants to move fast.",
+      "files": []
+    }
+  ]
+}
