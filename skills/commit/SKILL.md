@@ -31,5 +31,6 @@ Create a git commit for the current changes using a concise Conventional Commits
 2. Review `git status` and `git diff` to understand the current changes (limit to argument-specified files if provided).
 3. (Optional) Run `git log -n 50 --pretty=format:%s` to see commonly used scopes.
 4. If there are ambiguous extra files, ask the user for clarification before committing.
-5. Stage only the intended files (all changes if no files specified).
-6. Run `git commit -m "<subject>"` (and `-m "<body>"` if needed).
+5. **Update the changelog.** Before staging, update the "Unreleased" section of `CHANGELOG.md` with a concise entry describing the current changes. Stage the changelog together with the other files.
+6. Stage only the intended files plus the updated `CHANGELOG.md` (all changes if no files specified).
+7. Run `git commit -m "<subject>"` (and `-m "<body>"` if needed).
