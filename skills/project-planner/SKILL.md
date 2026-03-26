@@ -1,6 +1,6 @@
 ---
 name: project-planner
-description: "Plan and BUILD projects through structured spec-driven development with enforced interface contracts and integration tests. Use when the user wants to plan a project, scope features, create a specification, build a roadmap, or break work into milestones. Trigger on phrases like 'let's plan this out,' 'help me scope this,' 'break this into steps,' 'create a roadmap,' 'define the requirements,' 'let's spec this,' or 'I want to build X.' If SPEC.md or PROGRESS.md exists in the workspace, use this skill to continue the project. THIS SKILL MUST PRODUCE WORKING CODE AND FILES, NOT JUST PLANS. All code follows thin-boundary architecture: strict interfaces and contracts at module boundaries, flexible implementation internals, mandatory integration tests."
+description: "Plan and BUILD projects through structured spec-driven development with enforced interface contracts and integration tests. Generates SPEC.md, PROGRESS.md, CONTRACTS.md, and AGENTS.md (agent onboarding guide). Use when the user wants to plan a project, scope features, define new features, update the spec or roadmap, create a specification, break work into milestones, or add new capabilities to an existing project. Trigger on phrases like 'let's plan this out,' 'help me scope this,' 'let's define new features,' 'let's define features,' 'let's update the specs,' 'break this into steps,' 'create a roadmap,' 'define the requirements,' 'let's spec this,' 'I want to build X,' 'can we add a milestone for,' or any similar intent to define, plan, or extend a project's scope. If SPEC.md or PROGRESS.md exists in the workspace and the user wants to add, plan, or continue work, use this skill. THIS SKILL MUST PRODUCE WORKING CODE AND FILES, NOT JUST PLANS. All code follows thin-boundary architecture: strict interfaces and contracts at module boundaries, flexible implementation internals, mandatory integration tests."
 ---
 
 # Project Planner
@@ -11,10 +11,11 @@ A structured workflow for planning AND BUILDING projects — code, documentation
 
 **The strictness rule: all code follows thin-boundary architecture.** Interfaces and data contracts are enforced at module boundaries. Implementation code inside those boundaries is flexible. Integration tests validate that boundaries hold. See "Thin-Boundary Architecture" below for language-specific guidance.
 
-Three files drive everything:
+Four files drive everything:
 - **SPEC.md** — What to build: overview, execution plan, milestones with sub-milestones and granular tasks
 - **PROGRESS.md** — Where things stand: checklist of completed sub-milestones plus notes
 - **CONTRACTS.md** — Boundary contracts: interface definitions, data schemas, and integration test requirements
+- **AGENTS.md** — Agent onboarding guide: project overview, stack, setup commands, workflow rules, project structure, pointer to current state
 
 For templates, see `references/templates.md`.
 
@@ -119,6 +120,18 @@ Present it to the user. Walk through the execution plan, milestones, and boundar
 
 Also create the initial `PROGRESS.md` (see template in `references/templates.md`).
 
+Also create `AGENTS.md` — the agent onboarding guide. This file is what any agent (including you in a future session) reads first to orient themselves. It must contain:
+
+1. **What this project is** — 1–2 sentence description pulled from the proposal
+2. **Stack** — technology table (language, framework, DB, test framework, etc.)
+3. **Setup** — the exact commands to install dependencies, start the dev server, and run tests
+4. **Before doing any work** — instruct agents to always read SPEC.md, CONTRACTS.md, and PROGRESS.md completely before starting or resuming work
+5. **Workflow rules** — one sub-milestone at a time, three-gate validation, mandatory doc updates before every commit
+6. **Project structure** — annotated directory tree matching the actual layout
+7. **Current state** — a pointer to PROGRESS.md for the exact current sub-milestone
+
+Keep it factual and imperative — it's a briefing document, not a narrative. An agent arriving in a fresh session with no memory should be able to read AGENTS.md and know exactly what the project is, how to run it, and what to do next.
+
 ---
 
 ## Thin-Boundary Architecture
@@ -169,7 +182,7 @@ If any gate fails, fix it before presenting the review. Note failures and resolu
 
 ### Context Reset
 
-Before starting any sub-milestone, re-read `SPEC.md`, `PROGRESS.md`, and `CONTRACTS.md` from disk. Do this every time, without exception — the spec may have been updated, and in a new session you have no memory of prior work.
+Before starting any sub-milestone, re-read `AGENTS.md`, `SPEC.md`, `PROGRESS.md`, and `CONTRACTS.md` from disk. Do this every time, without exception — the spec may have been updated, and in a new session you have no memory of prior work.
 
 ### Build the Sub-milestone
 
@@ -234,10 +247,12 @@ Read the `commit` skill if available for commit message formatting. If not, use 
 
 When you detect an existing `SPEC.md` and `PROGRESS.md` in the workspace:
 
-1. Read all project files completely (`SPEC.md`, `PROGRESS.md`, `CONTRACTS.md` if it exists)
+1. Read all project files completely (`AGENTS.md` if it exists, `SPEC.md`, `PROGRESS.md`, `CONTRACTS.md` if it exists)
 2. Identify where the project left off (check the "Current" section in PROGRESS.md)
 3. Summarize the current state to the user: "It looks like you're working on [project]. Sub-milestone M[X].[Y] is next. Want me to continue from here?"
 4. If continuing, follow Phase 4 starting with a context reset
+
+If `AGENTS.md` is missing from an existing project, generate it now by reading the other files and synthesising the setup, stack, and workflow information from them.
 
 If the user wants to change direction, go back to discovery — but keep the existing spec as a starting point.
 
@@ -249,6 +264,7 @@ When creating projects, follow this directory layout to separate boundary contra
 
 ```
 project-root/
+├── AGENTS.md           # Agent onboarding guide (what, stack, setup, workflow)
 ├── SPEC.md
 ├── PROGRESS.md
 ├── CONTRACTS.md
@@ -341,3 +357,6 @@ If new milestones keep getting added, pause and have a scoping conversation. Dis
 
 **Three-gate validation fails repeatedly:**
 If the same gate fails more than twice in a row, stop and reassess. The contract may be wrong, not the implementation. Propose a contract change to the user.
+
+**AGENTS.md is missing on resume:**
+Generate it from the existing SPEC.md, PROGRESS.md, and CONTRACTS.md. Synthesise the project description, stack, setup commands, and workflow rules. Confirm with the user before writing.
