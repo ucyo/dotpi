@@ -1,0 +1,6 @@
+auth.json
+settings.json
+sessions/
+git
+bin/
+agent/
